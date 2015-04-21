@@ -189,7 +189,6 @@ module Tp2h15 : TP2H15 = struct
 	let lst_arr = [] in
 	concat (List.map (fun x -> uniques (x.arrondissement::lst_arr)) self#get_liste_activites)
       
-      
       (* lister_types_activites : string list *)
       method lister_types_activites =
 	let lst_type = [] in
@@ -209,10 +208,11 @@ module Tp2h15 : TP2H15 = struct
       method ajouter_liste_activites (lla:string list list) = 
 	parent#set_list_activite (List.map (fun x -> (activite x)) lla)
 	
-
+      (* A FAIRE *)
       (* charger_donnees_sysactivites : string -> unit *)
       method charger_donnees_sysactivites (fichier:string) =
 
+	  (* A FAIRE *)
       (* trier_activites : int -> unit *)
       method trier_activites (ordre:int) = match ordre with
       |1 -> 
@@ -237,9 +237,11 @@ module Tp2h15 : TP2H15 = struct
       method ajouter_liste_activites (lla:string list list) =
 	parent#set_list_activite (List.map (fun x -> (activite x)) lla)
 
+	  (* A FAIRE *)
       (* charger_donnees_sysactivites : string -> unit *)
-       method charger_donnees_sysactivites (fichier:string) = 
+      method charger_donnees_sysactivites (fichier:string) = 
 
+	  (* A FAIRE *)
       (* trier_activites : int -> unit *)
       method trier_activites (ordre:int) = match ordre with
       |1 -> 
@@ -259,9 +261,11 @@ module Tp2h15 : TP2H15 = struct
 
       (* Méthodes à implanter *)
 
+	  (* A FAIRE *)
       (* sauvegarder_liste_activites : activite list -> out_channel -> unit *)      
       method sauvegarder_liste_activites (la:activite list) (flux:out_channel) =
 
+	  (* A FAIRE *)
       (* lancer_systeme_activites : unit *) 
       method lancer_systeme_activites =
 
