@@ -129,14 +129,14 @@ module Tp2h15 : TP2H15 = struct
       
       (* afficher_activite : unit *)
       method afficher_activite =
-	print_string( "Description: " ^ self#get_description ^
-		      "\nType: " ^ self#get_type_activite ^ 
-		      "\nLieu: " ^ self#get_lieu_1 ^
-		      "\nAdresse: " ^ self#get_adresse ^ 
-		      "\nArrondissement: " ^ self#get_arrondissement ^
-		      "\n:Dates:" ^ self#get_date_deb ^  " au " ^ self#get_date_fin ^
-		      "\nJour de la semaine: " ^ self#get_jour_semaine ^
-		      "\nHeures: " ^ self#get_heure_deb ^ " au " ^ self#get_heure_fin ^ "\n\n")
+	    print_string ("Description: " ^ self#get_description ^
+		  "\nType: " ^ string_of_bool self#get_type_activite ^ 
+		  "\nLieu: " ^ self#get_lieu_1 ^
+		  "\nAdresse: " ^ self#get_adresse ^ 
+		  "\nArrondissement: " ^ self#get_arrondissement ^
+		  "\n:Dates:" ^ self#get_date_deb ^  " au " ^ self#get_date_fin ^
+		  "\nJour de la semaine: " ^ self#get_jour_semaine ^
+		  "\nHeures: " ^ self#get_heure_deb ^ " au " ^ self#get_heure_fin ^ "\n\n")
 
     end
 
@@ -153,46 +153,48 @@ module Tp2h15 : TP2H15 = struct
       (* Méthodes à implanter *)
       
       (* ajouter_activite : activite -> unit *)
-      method ajouter_activite (a:activite) = a::self#liste_activites
+      method ajouter_activite (a:activite) = ignore (append self#get_liste_activites [a])
 
       (* A VERIFIER *)
       (* supprimer_activite : activite -> unit *)
       method supprimer_activite (a:activite) = 
-	if activite_existe then 
-	  enlever a self#list_activities
-	else fail_with ("Le systeme d'activites ne contient pas cette activite")
+	    if self#activite_existe a then 
+	      ignore (enlever a self#get_liste_activites)
+	    else failwith ("Le systeme d'activites ne contient pas cette activite")
 
       (* afficher_systeme_activites : unit *)
-      method afficher_systeme_activites = List.iter (afficher_activite) self#set_liste_activites
+      method afficher_systeme_activites = List.iter (fun (x:activite) -> x#afficher_activite) self#get_liste_activites
 
       (* A VERIFIER *)
       (* lire_fichier : in_channel -> string -> string list list *)
-      method lire_fichier (flux:in_channel) (separateur:string) = 
-	let read_line ic =
-	  try
-	    input_line ic (* Lire la ligne sans le retour de chariot *)
-	  with End_of_file -> "" in
-	let lg = read_line flux in match lg with
-	| "" -> failwith liste_vide
-	| s -> decouper_chaine separateur s
+      (* method lire_fichier (flux:in_channel) (separateur:string) = 
+	    let read_line ic =
+	      try
+	        input_line ic (* Lire la ligne sans le retour de chariot *)
+	      with End_of_file -> "" in
+	    let lg = read_line flux in match lg with
+	      | "" -> failwith "La liste est vide"
+	      | s -> decouper_chaine separateur s *)
+	  method lire_fichier (flux:in_channel) (separateur:string) = 
+		decouper_chaine (input_line flux) separateur :: self#lire_fichier flux separateur
 
       (* trouver_selon_arrondissement : string -> activite list *)
       method trouver_selon_arrondissement (na:string) = 
-	List.filter (fun x -> x.arrondissement = na) self#get_liste_activites
+	    List.filter (fun (x:activite) -> x#get_arrondissement = na) self#get_liste_activites
 
       (* trouver_selon_type : string -> activite list *)
       method trouver_selon_type (ta:string) = 
-	List.filter (fun x -> x.type_activite = ta) self#get_liste_activites
+	    List.filter (fun (x:activite) -> x#get_description_nat = ta) self#get_liste_activites
 
       (* lister_arrondissements : string list *)
       method lister_arrondissements = 
-	let lst_arr = [] in
-	concat (List.map (fun x -> uniques (x.arrondissement::lst_arr)) self#get_liste_activites)
+	    let lst_arr = [] in
+	      concat (List.map (fun (x:activite) -> uniques (x#get_arrondissement::lst_arr)) self#get_liste_activites)
       
       (* lister_types_activites : string list *)
       method lister_types_activites =
-	let lst_type = [] in
-	concat (List.map (fun x -> uniques (x.type_activite::lst_type)) self#get_liste_activites)
+	    let lst_type = [] in
+	      concat (List.map (fun (x:activite) -> uniques (x#get_description_nat::lst_type)) self#get_liste_activites)
 
     end
 
@@ -206,19 +208,19 @@ module Tp2h15 : TP2H15 = struct
 
       (* ajouter_liste_activites : string list list -> unit *)
       method ajouter_liste_activites (lla:string list list) = 
-	parent#set_list_activite (List.map (fun x -> (activite x)) lla)
+	    parent#set_liste_activites (List.map (fun (x:string list) -> (new activite x false)) lla)
 	
       (* A FAIRE *)
       (* charger_donnees_sysactivites : string -> unit *)
-      method charger_donnees_sysactivites (fichier:string) =
+      method charger_donnees_sysactivites (fichier:string) = print_string "A FAIRE"
 
 	  (* A FAIRE *)
       (* trier_activites : int -> unit *)
       method trier_activites (ordre:int) = match ordre with
-      |1 -> 
-      |2 -> 
-      |3 -> 
-      |_ -> failwith failure
+      |1 -> print_string "LOL"
+      |2 -> print_string "LOL2"
+      |3 -> print_string "LOL3"
+      |_ -> failwith "FAIL A FAIRE"
 
       initializer print_string ("Recherche dans un " ^ (self#get_systeme_utilisees) ^ 
 				" utilisant les " ^ (parent#get_origine_donnees) ^ ".");
@@ -235,19 +237,19 @@ module Tp2h15 : TP2H15 = struct
 
       (* ajouter_liste_activites : string list list -> unit *)
       method ajouter_liste_activites (lla:string list list) =
-	parent#set_list_activite (List.map (fun x -> (activite x)) lla)
+	    parent#set_liste_activites (List.map (fun (x:string list) -> (new activite x true)) lla)
 
 	  (* A FAIRE *)
       (* charger_donnees_sysactivites : string -> unit *)
-      method charger_donnees_sysactivites (fichier:string) = 
+      method charger_donnees_sysactivites (fichier:string) = print_string "A FAIRE"
 
 	  (* A FAIRE *)
       (* trier_activites : int -> unit *)
       method trier_activites (ordre:int) = match ordre with
-      |1 -> 
-      |2 -> 
-      |3 -> 
-      |_ -> failwith failure
+      |1 -> print_string "LOL"
+      |2 -> print_string "LOL2"
+      |3 -> print_string "LOL3"
+      |_ -> failwith "FAIL A FAIRE"
  
       initializer print_string ("Recherche dans un " ^ (self#get_systeme_utilisees) ^ 
 				" utilisant les " ^ (parent#get_origine_donnees) ^ ".");
@@ -261,13 +263,28 @@ module Tp2h15 : TP2H15 = struct
 
       (* Méthodes à implanter *)
 
-	  (* A FAIRE *)
+	  (* A VERIFIER *)
       (* sauvegarder_liste_activites : activite list -> out_channel -> unit *)      
-      method sauvegarder_liste_activites (la:activite list) (flux:out_channel) =
+      method sauvegarder_liste_activites (la:activite list) (flux:out_channel) = 
+	    match la with
+		  | [] -> failwith "La liste d'activités est vide!"
+		  | hd::tl -> let n = (length la) in
+		    for i = 0 to n do
+			  let e = nth la i in
+			    output_string flux ("Description: " ^ e#get_description ^
+		          "\nType: " ^ string_of_bool e#get_type_activite ^ 
+		          "\nLieu: " ^ e#get_lieu_1 ^
+		          "\nAdresse: " ^ e#get_adresse ^ 
+		          "\nArrondissement: " ^ e#get_arrondissement ^
+		          "\n:Dates:" ^ e#get_date_deb ^  " au " ^ e#get_date_fin ^
+		          "\nJour de la semaine: " ^ e#get_jour_semaine ^
+		          "\nHeures: " ^ e#get_heure_deb ^ " au " ^ e#get_heure_fin ^ "\n\n");
+			done
+			    
 
 	  (* A FAIRE *)
       (* lancer_systeme_activites : unit *) 
-      method lancer_systeme_activites =
+      method lancer_systeme_activites = print_string "LANCER A FAIRE"
 
       initializer self#lancer_systeme_activites
     end
