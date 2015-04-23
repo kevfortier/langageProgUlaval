@@ -162,7 +162,9 @@ module Tp2h15 : TP2H15 = struct
 	    else failwith ("Le systeme d'activites ne contient pas cette activite")
 
       (* afficher_systeme_activites : unit *)
-      method afficher_systeme_activites = List.iter (fun (x:activite) -> x#afficher_activite) self#get_liste_activites
+      method afficher_systeme_activites = match self#get_liste_activites with
+	    | [] -> failwith "Le systeme d'activites est vide"
+		| _ -> List.iter (fun (x:activite) -> x#afficher_activite) self#get_liste_activites
 
       (* lire_fichier : in_channel -> string -> string list list *)
 	  method lire_fichier (flux:in_channel) (separateur:string) = 
@@ -175,22 +177,24 @@ module Tp2h15 : TP2H15 = struct
 		    List.rev !lines
 
       (* trouver_selon_arrondissement : string -> activite list *)
-      method trouver_selon_arrondissement (na:string) = 
-	    List.filter (fun (x:activite) -> x#get_arrondissement = na) self#get_liste_activites
+      method trouver_selon_arrondissement (na:string) = match self#get_liste_activites with
+	    | [] -> failwith "Le systeme d'activites est vide"
+	    | _ -> List.filter (fun (x:activite) -> x#get_arrondissement = na) self#get_liste_activites
 
       (* trouver_selon_type : string -> activite list *)
-      method trouver_selon_type (ta:string) = 
-	    List.filter (fun (x:activite) -> x#get_description_nat = ta) self#get_liste_activites
+      method trouver_selon_type (ta:string) = match self#get_liste_activites with
+	    | [] -> failwith "Le systeme d'activites est vide"
+	    | _ -> List.filter (fun (x:activite) -> x#get_description_nat = ta) self#get_liste_activites
 
       (* lister_arrondissements : string list *)
-      method lister_arrondissements = 
-	    let lst_arr = [] in
-	      concat (List.map (fun (x:activite) -> uniques (x#get_arrondissement::lst_arr)) self#get_liste_activites)
+      method lister_arrondissements = match self#get_liste_activites with
+	    | [] -> failwith "Le systeme d'activites est vide"
+	    | _ -> uniques (List.map (fun (x:activite) -> x#get_arrondissement) self#get_liste_activites)
       
       (* lister_types_activites : string list *)
-      method lister_types_activites =
-	    let lst_type = [] in
-	      concat (List.map (fun (x:activite) -> uniques (x#get_description_nat::lst_type)) self#get_liste_activites)
+      method lister_types_activites =match self#get_liste_activites with
+	    | [] -> failwith "Le systeme d'activites est vide"
+	    | _ -> uniques (List.map (fun (x:activite) -> x#get_description_nat) self#get_liste_activites)
 
     end
 
@@ -206,9 +210,11 @@ module Tp2h15 : TP2H15 = struct
       method ajouter_liste_activites (lla:string list list) = 
 	    parent#set_liste_activites (List.map (fun (x:string list) -> (new activite x true)) lla)
 	
-      (* A FAIRE *)
+      (* A VERIFIER *)
       (* charger_donnees_sysactivites : string -> unit *)
-      method charger_donnees_sysactivites (fichier:string) = print_string "A FAIRE - charger_donnees_sysactivites\n"
+      method charger_donnees_sysactivites (fichier:string) = 
+	    let liste = parent#lire_fichier (open_in fichier) "|" in
+	      self#ajouter_liste_activites (enlever (nth liste 0) liste)
 
 	  (* A FAIRE *)
       (* trier_activites : int -> unit *)
@@ -216,7 +222,7 @@ module Tp2h15 : TP2H15 = struct
       |1 -> print_string "A FAIRE - trier_activites\n"
       |2 -> print_string "A FAIRE - trier_activites 2\n"
       |3 -> print_string "A FAIRE - trier_activites 3\n"
-      |_ -> failwith "A FAIRE - trier_activites failwith\n"
+      |_ -> failwith "trier_activites: ordre incorrect!"
 
       initializer print_string ("Recherche dans un " ^ (self#get_systeme_utilisees) ^ 
 				" utilisant les " ^ (parent#get_origine_donnees) ^ ".");
@@ -237,7 +243,8 @@ module Tp2h15 : TP2H15 = struct
 
 	  (* A FAIRE *)
       (* charger_donnees_sysactivites : string -> unit *)
-      method charger_donnees_sysactivites (fichier:string) = print_string "A FAIRE - charger_donnees_sysactivites\n"
+      method charger_donnees_sysactivites (fichier:string) = 
+		print_string "A FAIRE - charger_donnees_sysactivites\n"
 
 	  (* A FAIRE *)
       (* trier_activites : int -> unit *)
@@ -245,7 +252,7 @@ module Tp2h15 : TP2H15 = struct
       |1 -> print_string "A FAIRE - trier_activites\n"
       |2 -> print_string "A FAIRE - trier_activites 2\n"
       |3 -> print_string "A FAIRE - trier_activites 3\n"
-      |_ -> failwith "A FAIRE - trier_activites failwith\n"
+      |_ -> failwith "trier_activites: ordre incorrect!"
  
       initializer print_string ("Recherche dans un " ^ (self#get_systeme_utilisees) ^ 
 				" utilisant les " ^ (parent#get_origine_donnees) ^ ".");
@@ -263,8 +270,8 @@ module Tp2h15 : TP2H15 = struct
       (* sauvegarder_liste_activites : activite list -> out_channel -> unit *)      
       method sauvegarder_liste_activites (la:activite list) (flux:out_channel) = 
 	    match la with
-		  | [] -> failwith "La liste d'activités est vide!"
-		  | hd::tl -> let n = (length la) in
+		  | [] -> failwith "La liste d'activites est vide"
+		  | _ -> let n = (length la) in
 		    for i = 0 to n do
 			  let e = nth la i in
 			    output_string flux ("Description: " ^ e#get_description ^

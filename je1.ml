@@ -181,7 +181,6 @@ Heures: 10:30:00 a 11:25:00.
 - : unit = ()
 *)
 
-
 sag#supprimer_activite ag;;
 
 (* Résultat:
@@ -811,7 +810,6 @@ La liste d'activites est vide
 - : unit = ()
 - : unit = ()
 *)
-
 
 try 
   app#lancer_systeme_activites
