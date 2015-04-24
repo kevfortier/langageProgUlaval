@@ -294,12 +294,10 @@ module Tp2h15 : TP2H15 = struct
 	    print_string "Quel type d'activites vous interessent?\n1- Activites gratuites.\n2- Activites payantes.\n";
 	    print_string "Veuillez choisir une option (1 ou 2):? ";
 	    let choix = read_int() in
-	      if choix == 1 then
-		print_string "1"
-	      else if choix == 2 then
-	        print_string "2"
-	      else
-		print_string "Erreur"
+	      match choix with
+	      |1 -> print_string ("Recherche dans un systeme d'activites gratuites utilisant les donnees ouvertes de la ville de Quebec.\nQuel type (nature) d'activites vous interessent?")
+	      |2 -> print_string ("Recherche dans un systeme d'activites payante utilisant les donnees ouvertes de la ville de Quebec.\nQuel type (nature) d'activites vous interessent?")
+	      |_ -> print_string "Erreur"
 
 		(*let choix = read_line() in
 		  let sa = ref 0;
