@@ -128,9 +128,10 @@ module Tp2h15 : TP2H15 = struct
       (* Méthode à implanter *)
       
       (* afficher_activite : unit *)
+	  (* Affiche true au lieu du type -- À MODIFIER *)
       method afficher_activite =
 	    print_string ("Description: " ^ self#get_description ^
-		  "\nType: " ^ string_of_bool self#get_type_activite ^ 
+		  "\nType: " ^ self#get_description_nat ^ 
 		  "\nLieu: " ^ self#get_lieu_1 ^
 		  "\nAdresse: " ^ self#get_adresse ^ 
 		  "\nArrondissement: " ^ self#get_arrondissement ^

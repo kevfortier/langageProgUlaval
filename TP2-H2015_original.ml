@@ -1,17 +1,17 @@
 (***********************************************************************)
 (* Langages de Programmation: IFT 3000 NRC 11775                       *)
-(* TP2 HIVER 2015. Date limite: Vendredi 24 avril à 17h                *)
+(* TP2 HIVER 2015. Date limite: Vendredi 24 avril à 17h                *) 
 (* Implanter un système permettant de chercher des activités gratuites *)
 (* et payantes en utilisant les données ouvertes de la ville de Québec *)
 (***********************************************************************)
 (*                                                                     *)
-(* NOM: Fortier                     PRÉNOM: Kevin                      *)
-(* MATRICULE: 111 119 245           PROGRAMME: _______________________ *)
+(* NOM: ___________________________ PRÉNOM:___________________________ *) 
+(* MATRICULE: _____________________ PROGRAMME: _______________________ *)
 (*                                                                     *)
 (***********************************************************************)
 (*                                                                     *)
-(* NOM:                             PRÉNOM:                            *)
-(* MATRICULE:                       PROGRAMME: _______________________ *)
+(* NOM: ___________________________ PRÉNOM:___________________________ *) 
+(* MATRICULE: _____________________ PROGRAMME: _______________________ *)
 (*                                                                     *)
 (***********************************************************************)
 
@@ -23,7 +23,7 @@
 
 (********************************************************************) 
 (* Implantation du système en utilisant                             *)
-(* la programmation orientée objet                                  *) 
+(* la programmation orientée objet                       	    *) 
 (********************************************************************)
 
 module Tp2h15 : TP2H15 = struct
@@ -128,15 +128,7 @@ module Tp2h15 : TP2H15 = struct
       (* Méthode à implanter *)
       
       (* afficher_activite : unit *)
-      method afficher_activite =
-	    print_string ("Description: " ^ self#get_description ^
-		  "\nType: " ^ string_of_bool self#get_type_activite ^ 
-		  "\nLieu: " ^ self#get_lieu_1 ^
-		  "\nAdresse: " ^ self#get_adresse ^ 
-		  "\nArrondissement: " ^ self#get_arrondissement ^
-		  "\nDates:" ^ self#get_date_deb ^  " au " ^ self#get_date_fin ^
-		  "\nJour de la semaine: " ^ self#get_jour_semaine ^
-		  "\nHeures: " ^ self#get_heure_deb ^ " au " ^ self#get_heure_fin ^ "\n\n")
+      method afficher_activite = 
 
     end
 
@@ -153,48 +145,28 @@ module Tp2h15 : TP2H15 = struct
       (* Méthodes à implanter *)
       
       (* ajouter_activite : activite -> unit *)
-      method ajouter_activite (a:activite) = self#set_liste_activites (liste_activites @ [a]);
+      method ajouter_activite (a:activite) =
 
       (* supprimer_activite : activite -> unit *)
       method supprimer_activite (a:activite) = 
-	    if self#activite_existe a then 
-	      ignore (enlever a self#get_liste_activites)
-	    else failwith ("Le systeme d'activites ne contient pas cette activite")
 
       (* afficher_systeme_activites : unit *)
-      method afficher_systeme_activites = match self#get_liste_activites with
-	    | [] -> failwith "Le systeme d'activites est vide"
-		| _ -> List.iter (fun (x:activite) -> x#afficher_activite) self#get_liste_activites
+      method afficher_systeme_activites = 
 
       (* lire_fichier : in_channel -> string -> string list list *)
-	  method lire_fichier (flux:in_channel) (separateur:string) = 
-	    let lines = ref [] in
-		  try
-		    while true; do
-		      lines := decouper_chaine (input_line flux) separateur :: !lines
-		    done; []
-		  with End_of_file ->
-		    List.rev !lines
+      method lire_fichier (flux:in_channel) (separateur:string) =
 
       (* trouver_selon_arrondissement : string -> activite list *)
-      method trouver_selon_arrondissement (na:string) = match self#get_liste_activites with
-	    | [] -> failwith "Le systeme d'activites est vide"
-	    | _ -> List.filter (fun (x:activite) -> x#get_arrondissement = na) self#get_liste_activites
+      method trouver_selon_arrondissement (na:string) =
 
       (* trouver_selon_type : string -> activite list *)
-      method trouver_selon_type (ta:string) = match self#get_liste_activites with
-	    | [] -> failwith "Le systeme d'activites est vide"
-	    | _ -> List.filter (fun (x:activite) -> x#get_description_nat = ta) self#get_liste_activites
+      method trouver_selon_type (ta:string) = 
 
       (* lister_arrondissements : string list *)
-      method lister_arrondissements = match self#get_liste_activites with
-	    | [] -> failwith "Le systeme d'activites est vide"
-	    | _ -> uniques (List.map (fun (x:activite) -> x#get_arrondissement) self#get_liste_activites)
+      method lister_arrondissements =
       
       (* lister_types_activites : string list *)
-      method lister_types_activites =match self#get_liste_activites with
-	    | [] -> failwith "Le systeme d'activites est vide"
-	    | _ -> uniques (List.map (fun (x:activite) -> x#get_description_nat) self#get_liste_activites)
+      method lister_types_activites =
 
     end
 
@@ -207,22 +179,13 @@ module Tp2h15 : TP2H15 = struct
       (* Méthodes à implanter *)
 
       (* ajouter_liste_activites : string list list -> unit *)
-      method ajouter_liste_activites (lla:string list list) = 
-	    parent#set_liste_activites (List.map (fun (x:string list) -> (new activite x true)) lla)
-	
+      method ajouter_liste_activites (lla:string list list) =
+
       (* charger_donnees_sysactivites : string -> unit *)
-      method charger_donnees_sysactivites (fichier:string) = 
-	    let liste = parent#lire_fichier (open_in fichier) "|" in
-	      self#ajouter_liste_activites (enlever (nth liste 0) liste)
+      method charger_donnees_sysactivites (fichier:string) =
 
       (* trier_activites : int -> unit *)
-      method trier_activites (ordre:int) = match ordre with
-        |1 -> parent#set_liste_activites (List.sort (fun (x:activite) (y:activite) -> 
-		  compare (retourner_epoque_secondes x#get_date_deb "-" x#get_heure_deb ":") (retourner_epoque_secondes y#get_date_deb "-" y#get_heure_deb ":")) parent#get_liste_activites)
-        |2 -> parent#set_liste_activites (List.sort (fun (x:activite) (y:activite) -> 
-		  compare (retourner_epoque_secondes x#get_date_fin "-" x#get_heure_fin ":") (retourner_epoque_secondes y#get_date_fin "-" y#get_heure_fin ":")) parent#get_liste_activites)
-        |3 -> ()
-        |_ -> failwith "trier_activites: ordre incorrect!"
+      method trier_activites (ordre:int) =
 
       initializer print_string ("Recherche dans un " ^ (self#get_systeme_utilisees) ^ 
 				" utilisant les " ^ (parent#get_origine_donnees) ^ ".");
@@ -239,25 +202,16 @@ module Tp2h15 : TP2H15 = struct
 
       (* ajouter_liste_activites : string list list -> unit *)
       method ajouter_liste_activites (lla:string list list) =
-	    parent#set_liste_activites (List.map (fun (x:string list) -> (new activite x false)) lla)
 
       (* charger_donnees_sysactivites : string -> unit *)
-      method charger_donnees_sysactivites (fichier:string) = 
-		let liste = parent#lire_fichier (open_in fichier) "|" in
-	      self#ajouter_liste_activites (enlever (nth liste 0) liste)
+      method charger_donnees_sysactivites (fichier:string) =
 
       (* trier_activites : int -> unit *)
-      method trier_activites (ordre:int) = match ordre with
-        |1 -> parent#set_liste_activites (List.sort (fun (x:activite) (y:activite) -> 
-		  compare (retourner_epoque_secondes x#get_date_deb "-" x#get_heure_deb ":") (retourner_epoque_secondes y#get_date_deb "-" y#get_heure_deb ":")) parent#get_liste_activites)
-        |2 -> parent#set_liste_activites (List.sort (fun (x:activite) (y:activite) -> 
-		  compare (retourner_epoque_secondes x#get_date_fin "-" x#get_heure_fin ":") (retourner_epoque_secondes y#get_date_fin "-" y#get_heure_fin ":")) parent#get_liste_activites)
-        |3 -> ()
-        |_ -> failwith "trier_activites: ordre incorrect!"
+      method trier_activites (ordre:int) = 
  
       initializer print_string ("Recherche dans un " ^ (self#get_systeme_utilisees) ^ 
-		" utilisant les " ^ (parent#get_origine_donnees) ^ ".");
-		print_newline()
+				" utilisant les " ^ (parent#get_origine_donnees) ^ ".");
+				print_newline()
     end
 
   class app_sysactivites (nfa:string) (nfp:string) =
@@ -267,38 +221,14 @@ module Tp2h15 : TP2H15 = struct
 
       (* Méthodes à implanter *)
 
-	  (* A VERIFIER *)
       (* sauvegarder_liste_activites : activite list -> out_channel -> unit *)      
-      method sauvegarder_liste_activites (la:activite list) (flux:out_channel) = 
-	    match la with
-		  | [] -> failwith "La liste d'activites est vide"
-		  | _ -> let n = (length la) in
-		    for i = 0 to n do
-			  let e = nth la i in
-			    output_string flux ("Description: " ^ e#get_description ^
-		          "\nType: " ^ string_of_bool e#get_type_activite ^ 
-		          "\nLieu: " ^ e#get_lieu_1 ^
-		          "\nAdresse: " ^ e#get_adresse ^ 
-		          "\nArrondissement: " ^ e#get_arrondissement ^
-		          "\n:Dates:" ^ e#get_date_deb ^  " au " ^ e#get_date_fin ^
-		          "\nJour de la semaine: " ^ e#get_jour_semaine ^
-		          "\nHeures: " ^ e#get_heure_deb ^ " au " ^ e#get_heure_fin ^ "\n\n");
-			done
-			    
+      method sauvegarder_liste_activites (la:activite list) (flux:out_channel) =
 
-	  (* A FAIRE *)
       (* lancer_systeme_activites : unit *) 
-      method lancer_systeme_activites = 
-	    print_string "Bienvenue a l'outil de recherche du Centre de Losirs de Quebec\n";
-		print_string "Quel type d'activites vous interessent?\n1- Activites gratuites.\n2- Activites payantes.\n";
-		print_string "Veuillez choisir une option (1 ou 2):? ";
-		(*let choix = read_line() in
-		  let sa = ref 0;
-		  if compare choix "1" == 0 then (
-		    print_string "LOL 1"
-		  );
-		  print_string "LOL"*)
+      method lancer_systeme_activites =
 
       initializer self#lancer_systeme_activites
+
     end
+
 end
