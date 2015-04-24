@@ -166,7 +166,7 @@ val na : int = 1
 *)
 
 
-ag#afficher_activite;;
+sag#afficher_activite;;
 
 (*
 Description: Aquaforme.

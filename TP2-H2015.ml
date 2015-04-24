@@ -10,8 +10,8 @@
 (*                                                                     *)
 (***********************************************************************)
 (*                                                                     *)
-(* NOM:                             PRÉNOM:                            *)
-(* MATRICULE:                       PROGRAMME: _______________________ *)
+(* NOM: Desbiens                    PRÉNOM: Alexandre                  *)
+(* MATRICULE: 111 105 772           PROGRAMME: IFT____________________ *)
 (*                                                                     *)
 (***********************************************************************)
 
@@ -313,16 +313,23 @@ module Tp2h15 : TP2H15 = struct
               let strArr = nth lst_arr choix in
               if strType == "Tous" && strArr == "Tous" then
                 sag#afficher_systeme_activites
-              else if strType == "Tous" then
-                print_string "afficher selon type"
-              else if strArr == "Tous" then
-                print_string "Afficher selon arrondissement"
-              else
-                print_string "Tout afficher type et arrondissement"
+              else if strType == "Tous" then begin
+                sag#set_liste_activites (sag#trouver_selon_arrondissement strArr);
+				sag#afficher_systeme_activites
+				end
+              else if strArr == "Tous" then begin
+                sag#set_liste_activites (sag#trouver_selon_type strType);
+				sag#afficher_systeme_activites
+				end
+              else begin
+                sag#set_liste_activites (sag#trouver_selon_arrondissement strArr);
+                sag#set_liste_activites (sag#trouver_selon_type strType);
+				sag#afficher_systeme_activites
+				end
             else
               print_string "Erreur"
           
-	      |2 -> let sap = new sysactivites_payantes "systeme d'activites payante" "donnees ouvertes de la ville de Quebec" in let _ = sap#charger_donnees_sysactivites nom_fichier_apayantes in
+	      |2 -> let sap = new sysactivites_payantes "systeme d'activites payantes" "donnees ouvertes de la ville de Quebec" in let _ = sap#charger_donnees_sysactivites nom_fichier_apayantes in
           let lst_type = sap#lister_types_activites in
           print_string ("Quel type (nature) d'activites vous interessent?\n");
           print_string (formater_chaine lst_type);
@@ -341,12 +348,19 @@ module Tp2h15 : TP2H15 = struct
               let strArr = nth lst_arr choix in
               if strType == "Tous" && strArr == "Tous" then
                 sap#afficher_systeme_activites
-              else if strType == "Tous" then
-                print_string "afficher selon type"
-              else if strArr == "Tous" then
-                print_string "Afficher selon arrondissement"
-              else
-                print_string "Tout afficher type et arrondissement"
+              else if strType == "Tous" then begin
+                sap#set_liste_activites (sap#trouver_selon_arrondissement strArr);
+				sap#afficher_systeme_activites
+				end
+              else if strArr == "Tous" then begin
+                sap#set_liste_activites (sap#trouver_selon_type strType);
+				sap#afficher_systeme_activites
+				end
+              else begin
+                sap#set_liste_activites (sap#trouver_selon_arrondissement strArr);
+                sap#set_liste_activites (sap#trouver_selon_type strType);
+				sap#afficher_systeme_activites
+				end
             else
               print_string "Erreur"
 	      |_ -> print_string "Erreur"
