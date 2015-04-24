@@ -153,7 +153,7 @@ module Tp2h15 : TP2H15 = struct
       (* Méthodes à implanter *)
       
       (* ajouter_activite : activite -> unit *)
-      method ajouter_activite (a:activite) = liste_activites <- liste_activites @ [a];
+      method ajouter_activite (a:activite) = self#set_liste_activites (liste_activites @ [a]);
 
       (* supprimer_activite : activite -> unit *)
       method supprimer_activite (a:activite) = 
@@ -210,19 +210,19 @@ module Tp2h15 : TP2H15 = struct
       method ajouter_liste_activites (lla:string list list) = 
 	    parent#set_liste_activites (List.map (fun (x:string list) -> (new activite x true)) lla)
 	
-      (* A VERIFIER *)
       (* charger_donnees_sysactivites : string -> unit *)
       method charger_donnees_sysactivites (fichier:string) = 
 	    let liste = parent#lire_fichier (open_in fichier) "|" in
 	      self#ajouter_liste_activites (enlever (nth liste 0) liste)
 
-	  (* A FAIRE *)
       (* trier_activites : int -> unit *)
       method trier_activites (ordre:int) = match ordre with
-      |1 -> print_string "A FAIRE - trier_activites\n"
-      |2 -> print_string "A FAIRE - trier_activites 2\n"
-      |3 -> print_string "A FAIRE - trier_activites 3\n"
-      |_ -> failwith "trier_activites: ordre incorrect!"
+        |1 -> parent#set_liste_activites (List.sort (fun (x:activite) (y:activite) -> 
+		  compare (retourner_epoque_secondes x#get_date_deb "-" x#get_heure_deb ":") (retourner_epoque_secondes y#get_date_deb "-" y#get_heure_deb ":")) parent#get_liste_activites)
+        |2 -> parent#set_liste_activites (List.sort (fun (x:activite) (y:activite) -> 
+		  compare (retourner_epoque_secondes x#get_date_fin "-" x#get_heure_fin ":") (retourner_epoque_secondes y#get_date_fin "-" y#get_heure_fin ":")) parent#get_liste_activites)
+        |3 -> ()
+        |_ -> failwith "trier_activites: ordre incorrect!"
 
       initializer print_string ("Recherche dans un " ^ (self#get_systeme_utilisees) ^ 
 				" utilisant les " ^ (parent#get_origine_donnees) ^ ".");
@@ -241,22 +241,23 @@ module Tp2h15 : TP2H15 = struct
       method ajouter_liste_activites (lla:string list list) =
 	    parent#set_liste_activites (List.map (fun (x:string list) -> (new activite x false)) lla)
 
-	  (* A FAIRE *)
       (* charger_donnees_sysactivites : string -> unit *)
       method charger_donnees_sysactivites (fichier:string) = 
-		print_string "A FAIRE - charger_donnees_sysactivites\n"
+		let liste = parent#lire_fichier (open_in fichier) "|" in
+	      self#ajouter_liste_activites (enlever (nth liste 0) liste)
 
-	  (* A FAIRE *)
       (* trier_activites : int -> unit *)
       method trier_activites (ordre:int) = match ordre with
-      |1 -> print_string "A FAIRE - trier_activites\n"
-      |2 -> print_string "A FAIRE - trier_activites 2\n"
-      |3 -> print_string "A FAIRE - trier_activites 3\n"
-      |_ -> failwith "trier_activites: ordre incorrect!"
+        |1 -> parent#set_liste_activites (List.sort (fun (x:activite) (y:activite) -> 
+		  compare (retourner_epoque_secondes x#get_date_deb "-" x#get_heure_deb ":") (retourner_epoque_secondes y#get_date_deb "-" y#get_heure_deb ":")) parent#get_liste_activites)
+        |2 -> parent#set_liste_activites (List.sort (fun (x:activite) (y:activite) -> 
+		  compare (retourner_epoque_secondes x#get_date_fin "-" x#get_heure_fin ":") (retourner_epoque_secondes y#get_date_fin "-" y#get_heure_fin ":")) parent#get_liste_activites)
+        |3 -> ()
+        |_ -> failwith "trier_activites: ordre incorrect!"
  
       initializer print_string ("Recherche dans un " ^ (self#get_systeme_utilisees) ^ 
-				" utilisant les " ^ (parent#get_origine_donnees) ^ ".");
-				print_newline()
+		" utilisant les " ^ (parent#get_origine_donnees) ^ ".");
+		print_newline()
     end
 
   class app_sysactivites (nfa:string) (nfp:string) =
@@ -287,7 +288,16 @@ module Tp2h15 : TP2H15 = struct
 
 	  (* A FAIRE *)
       (* lancer_systeme_activites : unit *) 
-      method lancer_systeme_activites = print_string "A FAIRE - lancer_system_activites\n"
+      method lancer_systeme_activites = 
+	    print_string "Bienvenue a l'outil de recherche du Centre de Losirs de Quebec\n";
+		print_string "Quel type d'activites vous interessent?\n1- Activites gratuites.\n2- Activites payantes.\n";
+		print_string "Veuillez choisir une option (1 ou 2):? ";
+		(*let choix = read_line() in
+		  let sa = ref 0;
+		  if compare choix "1" == 0 then (
+		    print_string "LOL 1"
+		  );
+		  print_string "LOL"*)
 
       initializer self#lancer_systeme_activites
     end
