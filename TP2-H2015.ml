@@ -290,13 +290,44 @@ module Tp2h15 : TP2H15 = struct
 	  (* A FAIRE *)
       (* lancer_systeme_activites : unit *) 
       method lancer_systeme_activites = 
-	    print_string "Bienvenue a l'outil de recherche du Centre de Losirs de Quebec\n";
+            print_string "Bienvenue a l'outil de recherche du Centre de Losirs de Quebec\n";
 	    print_string "Quel type d'activites vous interessent?\n1- Activites gratuites.\n2- Activites payantes.\n";
 	    print_string "Veuillez choisir une option (1 ou 2):? ";
 	    let choix = read_int() in
 	      match choix with
-	      |1 -> print_string ("Recherche dans un systeme d'activites gratuites utilisant les donnees ouvertes de la ville de Quebec.\nQuel type (nature) d'activites vous interessent?")
-	      |2 -> print_string ("Recherche dans un systeme d'activites payante utilisant les donnees ouvertes de la ville de Quebec.\nQuel type (nature) d'activites vous interessent?")
+	      |1 -> let sag = new sysactivites_gratuites "systeme d'activites gratuites" "donnees ouvertes de la ville de Quebec" in let _ = sag#charger_donnees_sysactivites nom_fichier_agratuites in
+          let lst_type = sag#lister_types_activites in
+          print_string ("Quel type (nature) d'activites vous interessent?\n");
+          print_string (formater_chaine lst_type);
+          (*for i = 0 to length lst_type - 1 do
+            print_string (string_of_int i ^ " - " ^ nth lst_type i ^ "\n")
+          done;*)
+          print_string ("\n\nVeuillez entrer un nombre entre 0 et " ^ string_of_int (length lst_type) ^ "? ");
+          let choix = read_int() in
+          if choix >= 0 && choix <= length lst_type then 
+            let strType = nth lst_type choix in
+            print_string ("\n\nQuel arrondissement vous interesse:?");
+            let lst_arr = sag#lister_arrondissements in
+            print_string (formater_chaine lst_arr);
+            print_string ("Veuillez entrer un nombre entre 0 et " ^ string_of_int (length lst_arr) ^ " :");
+            let choix = read_int() in
+            if choix >= 0 && choix <= length lst_arr then
+              print_string ("Voici le resultat de la recherche:\n");
+              let strArr = nth lst_arr choix in
+              if strType == "Tous" && strArr == "Tous" then
+                sag#afficher_systeme_activites
+              else if strType == "Tous" then
+                print_string "afficher selon type"
+              else if strArr == "Tous" then
+                print_string "Afficher selon arrondissement"
+              else
+                print_string "Tout afficher"
+            else
+              print_string "Erreur"
+          else
+            print_string "Erreur"
+          
+	      |2 -> print_string ("Recherche dans un systeme d'activites payante utilisant les donnees ouvertes de la ville de Quebec.\nQuel type (nature) d'activites vous interessent?");
 	      |_ -> print_string "Erreur"
 
 		(*let choix = read_line() in
